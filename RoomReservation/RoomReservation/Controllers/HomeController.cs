@@ -10,7 +10,14 @@ namespace RoomReservation.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "User");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult About()

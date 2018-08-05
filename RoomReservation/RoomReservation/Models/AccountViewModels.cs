@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace RoomReservation.Models
 {
@@ -55,29 +56,31 @@ namespace RoomReservation.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Hasło")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Zapamiętaj mnie")]
         public bool RememberMe { get; set; }
+        public ClaimsIdentity Login { get; internal set; }
     }
 
     public class RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Pole wymagane")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Pole wymagane")]
+        [StringLength(100, ErrorMessage = "Niepoprawna ilość znaków.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Hasło")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Pole wymagane")]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Powtórz hasło")]
+        [Compare("Password", ErrorMessage = "Hasła niezgodne.")]
         public string ConfirmPassword { get; set; }
     }
 
