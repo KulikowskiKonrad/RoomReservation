@@ -180,7 +180,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="DB\Models\RRRoom.cs" />
     <Compile Include="DB\Models\RRUser.cs" />
     <Compile Include="DB\RoomReservationContext.cs" />
     <Compile Include="Enum\UserRole.cs" />
@@ -193,11 +195,21 @@
     <Compile Include="Migrations\201808011729553_RRUser.Designer.cs">
       <DependentUpon>201808011729553_RRUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808060940384_RRRoom.cs" />
+    <Compile Include="Migrations\201808060940384_RRRoom.Designer.cs">
+      <DependentUpon>201808060940384_RRRoom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808061513356_RRRoomAddColumn.cs" />
+    <Compile Include="Migrations\201808061513356_RRRoomAddColumn.Designer.cs">
+      <DependentUpon>201808061513356_RRRoomAddColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\EditRoomViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\RoomRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -264,10 +276,17 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Room\RoomList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201808011729553_RRUser.resx">
       <DependentUpon>201808011729553_RRUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808060940384_RRRoom.resx">
+      <DependentUpon>201808060940384_RRRoom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808061513356_RRRoomAddColumn.resx">
+      <DependentUpon>201808061513356_RRRoomAddColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

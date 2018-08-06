@@ -11,7 +11,7 @@ namespace RoomReservation.DB
     {
 
         public DbSet<RRUser> Users { get; set; }
-
+        public DbSet<RRRoom> Rooms { get; set; }
         public RoomReservationContext()
             : base("DefaultConnection")
         {
