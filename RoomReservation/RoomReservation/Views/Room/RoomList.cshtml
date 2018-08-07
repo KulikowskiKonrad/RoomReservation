@@ -1,6 +1,47 @@
-﻿@model List<RoomReservation.Models.EditRoomViewModel>
-
+﻿@model List<RoomReservation.DB.Models.RRRoom>
 
 <h2>Lista pomieszczeń</h2>
 
-@Html.ActionLink("Dodaj pomieszczenie", "AddRoom", null, new { @class = "btn btn-default" })
+@Html.ActionLink("Dodaj pomieszczenie", "RoomDetails", null, new { @class = "btn btn-default" })
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped" style="margin-top:20px;">
+            <tr>
+                <th>
+                    Nazwa
+                </th>
+                <th>
+                    Szczegóły
+                </th>
+                <th>
+                </th>
+                <th></th>
+            </tr>
+            @foreach (RoomReservation.DB.Models.RRRoom pomieszczenie in Model)
+            {
+                <tr>
+                    <td>
+                        @pomieszczenie.Name
+                    </td>
+                    <td>
+                        @pomieszczenie.Details
+                    </td>
+                    <td>
+                        <a href="@Url.Action("RoomDetails","Room", new { id=pomieszczenie.Id })" class="btn btn-default btn-sm pull-left" title="Edytuj" style="margin-right:10px;"><span class="glyphicon glyphicon-cog"></span></a>
+                        @*to jest zamiana actionLink na a*@
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("Delete", "Room", FormMethod.Post))
+                        {
+                            @Html.Hidden("id", pomieszczenie.Id)  @*nazwa ma byc tak jak nazwa parametru w kontrolerze , a wartosc pobieramy z konkretnego elementu modelu*@
+                            <button type="button" title="Usuń" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-trash "></span>
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

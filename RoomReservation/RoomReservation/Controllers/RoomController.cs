@@ -1,5 +1,6 @@
 ﻿using RoomReservation.DB.Models;
 using RoomReservation.Helpers;
+using RoomReservation.Models;
 using RoomReservation.Repositories;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace RoomReservation.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet]
         public ActionResult RoomList()
         {
@@ -34,5 +35,97 @@ namespace RoomReservation.Controllers
                 return View("Error");
             }
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult RoomDetails(long? id)
+        {
+            try
+            {
+                EditRoomViewModel model = new EditRoomViewModel();
+                model.Id = id;
+                RoomRepository roomRepository = new RoomRepository();
+                if (id.HasValue)
+                {
+                    RRRoom pobranePomieszczenie = roomRepository.Pobierz(id.Value);
+                    model.Id = pobranePomieszczenie.Id;
+                    model.Name = pobranePomieszczenie.Name;
+                    model.Details = pobranePomieszczenie.Details;
+                }
+                return View("RoomDetails", model);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log.Error(ex);
+                return View("Error");
+            }
+        }
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult SaveRoomDetails(EditRoomViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    RoomRepository roomRepository = new RoomRepository();
+                    RRRoom room = null;
+                    if (model.Id.HasValue)
+                    {
+                        room = roomRepository.Pobierz(model.Id.Value);
+                    }
+                    else
+                    {
+                        room = new RRRoom();
+                    }
+                    room.Name = model.Name;
+                    room.Details = model.Details;
+                    long? rezultatZapisu = roomRepository.Zapisz(room);
+                    if (rezultatZapisu == null)
+                    {
+                        return View("Error");
+                    }
+                    else
+                    {
+                        return RedirectToAction("RoomList");
+                    }
+                }
+                else
+                {
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log.Error(ex);
+                return View("Error");
+            }
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Delete(long id)
+        {
+            try
+            {
+                if (ModelState.IsValid == true)
+                {
+                    RoomRepository roomRepository = new RoomRepository();
+                    bool rezultatUsuniecia = roomRepository.Usun(id);
+                    return RedirectToAction("RoomList");
+                }
+                else
+                {
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log.Error(ex);
+                return View("Error");
+            }
+        }
+
     }
 }

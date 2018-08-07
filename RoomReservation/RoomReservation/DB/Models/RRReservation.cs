@@ -1,6 +1,7 @@
 ﻿using RoomReservation.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -14,9 +15,12 @@ namespace RoomReservation.DB.Models
 
         public long RRUserId { get; set; }
 
-
+        [Required(ErrorMessage = "Pole wymagane")]
+        [Display(Name = "Rezerwacja od")]
         public DateTime BookingFrom { get; set; }
 
+        [Required(ErrorMessage = "Pole wymagane")]
+        [Display(Name = "Rezerwacja do")]
         public DateTime BookingTo { get; set; }
 
         public ReservationStatus Status { get; set; }

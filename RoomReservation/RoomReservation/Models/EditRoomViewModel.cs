@@ -11,26 +11,15 @@ namespace RoomReservation.Models
 
         public long? Id { get; set; }
 
-        [StringLength(80)]
-        [Display(Name = "Lokalizacja")]
-        public string Localization { get; set; }
+        [StringLength(200)]
+        [Required(ErrorMessage = "Pole wymagane")]
+        [Display(Name = "Szczegóły")]
+        public string Details { get; set; }
 
-        [StringLength(80, MinimumLength = 4)]
-        public string NameRoom { get; set; }
-
-        public bool OrBooked { get; set; }
-
-        [Display(Name = "Użytkownik")]
-        public long UserId { get; set; }
-
-        [Display(Name = "Rezerwacja od")]
-        public DateTime BookingFrom { get; set; }
-
-        [Display(Name = "Rezerwacja do")]
-        public DateTime BookingTo { get; set; }
-
-
-        public bool OrDeleted { get; set; }
+        [StringLength(100, ErrorMessage = "Niepoprawna ilość znaków")]
+        [Required(ErrorMessage = "Pole wymagane")]
+        [Display(Name = "Nazwa")]
+        public string Name { get; set; }
 
     }
 }

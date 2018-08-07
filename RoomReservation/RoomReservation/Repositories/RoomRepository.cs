@@ -58,8 +58,8 @@ namespace RoomReservation.Repositories
                     baza.Entry(pomieszczenie).State = pomieszczenie.Id > 0 ? EntityState.Modified : EntityState.Added;
                     baza.SaveChanges();
                     rezultat = pomieszczenie.Id;
-                    return rezultat;
                 }
+                return rezultat;
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace RoomReservation.Repositories
             }
         }
 
-        public bool Usun(long pomieszczenieId)
+        public bool Usun(long id)
         {
             try
             {
@@ -76,11 +76,11 @@ namespace RoomReservation.Repositories
                 using (RoomReservationContext baza = new RoomReservationContext())
                 {
                     RRRoom rRRoom = null;
-                    rRRoom = baza.Rooms.Where(x => x.Id == pomieszczenieId).Single();
+                    rRRoom = baza.Rooms.Where(x => x.Id == id).Single();
                     baza.SaveChanges();
                     rezultat = true;
-                    return rezultat;
                 }
+                return rezultat;
             }
             catch (Exception ex)
             {

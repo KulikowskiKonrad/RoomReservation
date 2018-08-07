@@ -1,0 +1,37 @@
+﻿@model RoomReservation.Models.EditRoomViewModel
+
+
+<h2>Detale pomieszczenia</h2>
+
+@using (Html.BeginForm("SaveRoomDetails", "Room", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.Id)
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                @Html.LabelFor(x => x.Name)
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
+                    @Html.TextBoxFor(x => x.Name, new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.Name) })
+                </div>
+                @Html.ValidationMessageFor(x => x.Name)
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                @Html.LabelFor(x => x.Details)
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
+                    @Html.TextBoxFor(x => x.Details, new { @class = "form-control", placeholder = Html.DisplayNameFor(x => x.Details) })
+                </div>
+                @Html.ValidationMessageFor(x => x.Details)
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-default">Zapisz</button>
+    @Html.ActionLink("Anuluj", "RoomList", "Room", null, new { @class = "btn btn-default" })
+}
