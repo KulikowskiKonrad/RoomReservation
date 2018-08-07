@@ -66,21 +66,21 @@ namespace RoomReservation.Models
 
     public class RegisterViewModel
     {
-        [Required(ErrorMessage = "Pole wymagane")]
-        [EmailAddress]
+        //[Required(ErrorMessage = "Pole wymagane")]
+        //[EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Pole wymagane")]
-        [StringLength(100, ErrorMessage = "Niepoprawna ilość znaków.", MinimumLength = 6)]
+        //[Required(ErrorMessage = "Pole wymagane")]
+        //[StringLength(100, ErrorMessage = "Niepoprawna ilość znaków.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Hasło")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Pole wymagane")]
+        //[Required(ErrorMessage = "Pole wymagane")]
         [DataType(DataType.Password)]
         [Display(Name = "Powtórz hasło")]
-        [Compare("Password", ErrorMessage = "Hasła niezgodne.")]
+        //[Compare("Password", ErrorMessage = "Hasła niezgodne.")]
         public string ConfirmPassword { get; set; }
     }
 

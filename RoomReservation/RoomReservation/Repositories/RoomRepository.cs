@@ -77,7 +77,6 @@ namespace RoomReservation.Repositories
                 {
                     RRRoom rRRoom = null;
                     rRRoom = baza.Rooms.Where(x => x.Id == pomieszczenieId).Single();
-                    rRRoom.OrDeleted = true;
                     baza.SaveChanges();
                     rezultat = true;
                     return rezultat;

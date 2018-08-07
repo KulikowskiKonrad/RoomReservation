@@ -182,9 +182,11 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="DB\Models\RRReservation.cs" />
     <Compile Include="DB\Models\RRRoom.cs" />
     <Compile Include="DB\Models\RRUser.cs" />
     <Compile Include="DB\RoomReservationContext.cs" />
+    <Compile Include="Enum\ReservationStatus.cs" />
     <Compile Include="Enum\UserRole.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -202,6 +204,10 @@
     <Compile Include="Migrations\201808061513356_RRRoomAddColumn.cs" />
     <Compile Include="Migrations\201808061513356_RRRoomAddColumn.Designer.cs">
       <DependentUpon>201808061513356_RRRoomAddColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808061628336_RRRoom Change.cs" />
+    <Compile Include="Migrations\201808061628336_RRRoom Change.Designer.cs">
+      <DependentUpon>201808061628336_RRRoom Change.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -287,6 +293,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808061513356_RRRoomAddColumn.resx">
       <DependentUpon>201808061513356_RRRoomAddColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808061628336_RRRoom Change.resx">
+      <DependentUpon>201808061628336_RRRoom Change.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
