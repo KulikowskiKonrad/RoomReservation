@@ -1,47 +1,113 @@
 ﻿@model List<RoomReservation.DB.Models.RRRoom>
-
+@Scripts.Render("~/bundles/js/RoomList")
+<script>
+    $(document).ready(function () {
+        $('.btn-usun').click(function () {
+            var btn = $(this);
+            swal({
+                title: 'Na pewno chcesz to usunąć?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Tak,chcę to usunąć!',
+                cancelButtonText: 'Anuluj'
+            }).then(function () {
+                $(btn).closest('form').submit();
+            })
+        });
+    });
+</script>
 <h2>Lista pomieszczeń</h2>
-
-@Html.ActionLink("Dodaj pomieszczenie", "RoomDetails", null, new { @class = "btn btn-default" })
-
-<div class="row">
+@if (User.IsInRole("Admin"))
+{
+    @Html.ActionLink("Dodaj pomieszczenie", "RoomDetails", null, new { @class = "btn btn-default" })
+}
+<div class="row" ng-app="RR">
     <div class="col-sm-12">
         <table class="table table-striped" style="margin-top:20px;">
             <tr>
-                <th>
+                <th class="col-sm-4">
                     Nazwa
                 </th>
-                <th>
+                <th class="col-sm-7">
                     Szczegóły
                 </th>
-                <th>
-                </th>
-                <th></th>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <th></th>
+                    <th>
+                    </th>
+                }
             </tr>
             @foreach (RoomReservation.DB.Models.RRRoom pomieszczenie in Model)
             {
                 <tr>
-                    <td>
+                    <td class="col-sm-4">
                         @pomieszczenie.Name
                     </td>
-                    <td>
+                    <td class="col-sm-7">
                         @pomieszczenie.Details
                     </td>
-                    <td>
-                        <a href="@Url.Action("RoomDetails","Room", new { id=pomieszczenie.Id })" class="btn btn-default btn-sm pull-left" title="Edytuj" style="margin-right:10px;"><span class="glyphicon glyphicon-cog"></span></a>
-                        @*to jest zamiana actionLink na a*@
-                    </td>
-                    <td>
-                        @using (Html.BeginForm("Delete", "Room", FormMethod.Post))
-                        {
-                            @Html.Hidden("id", pomieszczenie.Id)  @*nazwa ma byc tak jak nazwa parametru w kontrolerze , a wartosc pobieramy z konkretnego elementu modelu*@
-                            <button type="button" title="Usuń" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-trash "></span>
-                            </button>
-                        }
-                    </td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a href="@Url.Action("RoomDetails", "Room", new { id = pomieszczenie.Id })" class="btn btn-default btn-sm pull-right" title="Edytuj" style="margin-right:10px;"><span class="glyphicon glyphicon-cog"></span></a>
+                            @*to jest zamiana actionLink na a*@
+                        </td>
+
+                        <td>
+                            @using (Html.BeginForm("Delete", "Room", FormMethod.Post))
+                            {
+                                @Html.Hidden("id", pomieszczenie.Id)  @*nazwa ma byc tak jak nazwa parametru w kontrolerze , a wartosc pobieramy z konkretnego elementu modelu*@
+                                <button type="button" title="Usuń" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
+                                    <span class="glyphicon glyphicon-trash "></span>
+                                </button>
+                            }
+                        </td>
+                    }
                 </tr>
             }
         </table>
     </div>
 </div>
+
+@*<div ng-app="RR">
+        <div ng-controller="ModalDemoCtrl as $ctrl" class="modal-demo">
+            <script type="text/ng-template" id="myModalContent.html">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modal-title">I'm a modal!</h3>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <ul>
+                        <li ng-repeat="item in $ctrl.items">
+                            <a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>
+                        </li>
+                    </ul>
+                    Selected: <b>{{ $ctrl.selected.item }}</b>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+                    <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+                </div>
+            </script>
+
+            <button type="button" class="btn btn-default" ng-click="$ctrl.open()">Open me!</button>
+            <button type="button" class="btn btn-default" ng-click="$ctrl.open('lg')">Large modal</button>
+            <button type="button" class="btn btn-default" ng-click="$ctrl.open('sm')">Small modal</button>
+            <button type="button"
+                        class="btn btn-default"
+                        ng-click="$ctrl.open('sm', '.modal-parent')">
+                    Modal appended to a custom parent
+                </button>
+                <button type="button" class="btn btn-default" ng-click="$ctrl.toggleAnimation()">Toggle Animation ({{ $ctrl.animationsEnabled }})</button>
+                <button type="button" class="btn btn-default" ng-click="$ctrl.openComponentModal()">Open a component modal!</button>
+                <button type="button" class="btn btn-default" ng-click="$ctrl.openMultipleModals()">
+                    Open multiple modals at once
+                </button>
+                <div ng-show="$ctrl.selected">Selection from a modal: {{ $ctrl.selected }}</div>
+                <div class="modal-parent">
+                </div>
+        </div>
+    </div>*@

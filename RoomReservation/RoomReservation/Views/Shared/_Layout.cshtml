@@ -1,12 +1,23 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/js")
 
-
+    <script>
+        $(document).ready(function () {
+            $('.input-group.date-time').datetimepicker({
+                locale: 'pl'
+            });
+            $('.input-group.date').datetimepicker({
+                locale: 'pl',
+                format: 'YYYY-MM-DD'
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -22,12 +33,13 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Pomieszczenia", "RoomList", "Room")</li>
+                    <li>@Html.ActionLink("Rezerwacje", "ReservationList", "Reservation")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
-    <div class="container body-content" @*ng-app="RR"*@>
+    <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>

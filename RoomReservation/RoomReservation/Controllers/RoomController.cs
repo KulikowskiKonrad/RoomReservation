@@ -25,7 +25,7 @@ namespace RoomReservation.Controllers
             try
             {
                 RoomRepository roomRepository = new RoomRepository();
-                List<RRRoom> room = roomRepository.PobierzWszystkie();
+                List<RRRoom> room = roomRepository.DownloadAll();
                 return View("RoomList", room);
 
             }
@@ -47,7 +47,7 @@ namespace RoomReservation.Controllers
                 RoomRepository roomRepository = new RoomRepository();
                 if (id.HasValue)
                 {
-                    RRRoom pobranePomieszczenie = roomRepository.Pobierz(id.Value);
+                    RRRoom pobranePomieszczenie = roomRepository.Download(id.Value);
                     model.Id = pobranePomieszczenie.Id;
                     model.Name = pobranePomieszczenie.Name;
                     model.Details = pobranePomieszczenie.Details;
@@ -72,7 +72,7 @@ namespace RoomReservation.Controllers
                     RRRoom room = null;
                     if (model.Id.HasValue)
                     {
-                        room = roomRepository.Pobierz(model.Id.Value);
+                        room = roomRepository.Download(model.Id.Value);
                     }
                     else
                     {
@@ -80,7 +80,7 @@ namespace RoomReservation.Controllers
                     }
                     room.Name = model.Name;
                     room.Details = model.Details;
-                    long? rezultatZapisu = roomRepository.Zapisz(room);
+                    long? rezultatZapisu = roomRepository.Save(room);
                     if (rezultatZapisu == null)
                     {
                         return View("Error");
@@ -112,7 +112,7 @@ namespace RoomReservation.Controllers
                 if (ModelState.IsValid == true)
                 {
                     RoomRepository roomRepository = new RoomRepository();
-                    bool rezultatUsuniecia = roomRepository.Usun(id);
+                    bool rezultatUsuniecia = roomRepository.Delete(id);
                     return RedirectToAction("RoomList");
                 }
                 else

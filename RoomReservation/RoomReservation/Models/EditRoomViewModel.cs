@@ -21,5 +21,7 @@ namespace RoomReservation.Models
         [Display(Name = "Nazwa")]
         public string Name { get; set; }
 
+        public bool IsDeleted { get; set; }
+
     }
 }

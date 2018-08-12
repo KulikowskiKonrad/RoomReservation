@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace RoomReservation.DB.Models
+namespace RoomReservation.Models
 {
-    public class RRRoom
+    public class RoomListItem
     {
         public long Id { get; set; }
 
@@ -17,9 +17,5 @@ namespace RoomReservation.DB.Models
         [StringLength(100)]
         [Required]
         public string Name { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-        public virtual ICollection<RRReservation> Reservations { get; set; }
     }
 }

@@ -64,26 +64,6 @@ namespace RoomReservation.Models
         public ClaimsIdentity Login { get; internal set; }
     }
 
-    public class RegisterViewModel
-    {
-        //[Required(ErrorMessage = "Pole wymagane")]
-        //[EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-
-        //[Required(ErrorMessage = "Pole wymagane")]
-        //[StringLength(100, ErrorMessage = "Niepoprawna ilość znaków.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Hasło")]
-        public string Password { get; set; }
-
-        //[Required(ErrorMessage = "Pole wymagane")]
-        [DataType(DataType.Password)]
-        [Display(Name = "Powtórz hasło")]
-        //[Compare("Password", ErrorMessage = "Hasła niezgodne.")]
-        public string ConfirmPassword { get; set; }
-    }
-
     public class ResetPasswordViewModel
     {
         [Required]

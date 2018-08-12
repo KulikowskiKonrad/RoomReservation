@@ -17,10 +17,5 @@ namespace RoomReservation.Enum
 
         [Description("Odrzucony")]
         Rejected = 3,
-
-        [Description("Anulowany")]
-        Cancelled = 4
-
-
     }
 }

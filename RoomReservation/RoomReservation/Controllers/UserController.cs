@@ -131,55 +131,56 @@ namespace RoomReservation.Controllers
             return View("Register");
         }
 
-        [HttpPost]
-        public ActionResult Register(RegisterViewModel model)
-        {
-            try
-            {
-                if (ModelState.IsValid == true)
-                {
-                    UserRepository uzytkownikRepozytorium = new UserRepository();
-                    RRUser pobranyUzytkownik = uzytkownikRepozytorium.Pobierz(model.Email);
-                    if (pobranyUzytkownik == null)
-                    {
-                        string sol = Guid.NewGuid().ToString(); //robie sol jako GUID i zamieniam na string
+        //[HttpPost]
+        //public ActionResult Register(RegisterViewModel model)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid == true)
+        //        {
+        //            UserRepository uzytkownikRepozytorium = new UserRepository();
+        //            RRUser pobranyUzytkownik = uzytkownikRepozytorium.Pobierz(model.Email);
+        //            if (pobranyUzytkownik == null)
+        //            {
+        //                string sol = Guid.NewGuid().ToString(); //robie sol jako GUID i zamieniam na string
 
-                        RRUser uzytkownik = new RRUser()
-                        {
-                            Salt = sol,
-                            Email = model.Email,
-                            Password = MD5Helper.GenerateMD5(model.Password + sol), //generujemy md5 z polaczenia hasla i soli (losowego ciagu znakow) wywoluje metode statyczna z klasy
-                                                                                    //MD5Helper
-                            Role = UserRole.Standard
-                        };
-                        long? rezultatZapisu = uzytkownikRepozytorium.Zapisz(uzytkownik);
-                        if (rezultatZapisu != null)
-                        {
-                            return RedirectToAction("Login", "Account");
-                        }
-                        else
-                        {
-                            return View("Error");
-                        }
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("Login", "Login jest już zajęty");
-                        return View("Register", model);
-                    }
-                }
-                else
-                {
-                    return View("Register", model);
-                }
-            }
-            catch (Exception ex)
-            {
-                LogHelper.Log.Error(ex);
-                return View("Error");
-            }
+        //                RRUser uzytkownik = new RRUser()
+        //                {
+        //                    Salt = sol,
+        //                    Email = model.Email,
+        //                    Password = MD5Helper.GenerateMD5(model.Password + sol), //generujemy md5 z polaczenia hasla i soli (losowego ciagu znakow) wywoluje metode statyczna z klasy
+        //                                                                            //MD5Helper
+        //                    Role = UserRole.Standard
+        //                };
+        //                long? rezultatZapisu = uzytkownikRepozytorium.Zapisz(uzytkownik);
+        //                if (rezultatZapisu != null)
+        //                {
+        //                    return RedirectToAction("Login", "Account");
+        //                }
+        //                else
+        //                {
+        //                    return View("Error");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                ModelState.AddModelError("Login", "Login jest już zajęty");
+        //                return View("Register", model);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return View("Register", model);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogHelper.Log.Error(ex);
+        //        return View("Error");
+        //    }
 
-        }
+        //}
+
         [HttpPost]
         public ActionResult LogOff()
         {

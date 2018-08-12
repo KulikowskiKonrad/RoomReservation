@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -15,19 +16,16 @@ namespace RoomReservation.DB.Models
 
         public long RRUserId { get; set; }
 
-        [Required(ErrorMessage = "Pole wymagane")]
-        [Display(Name = "Rezerwacja od")]
-        public DateTime BookingFrom { get; set; }
-
-        [Required(ErrorMessage = "Pole wymagane")]
-        [Display(Name = "Rezerwacja do")]
-        public DateTime BookingTo { get; set; }
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
+        public DateTime Date { get; set; }
 
         public ReservationStatus Status { get; set; }
+
+        public bool IsDeleted { get; set; }
 
         public virtual RRRoom Room { get; set; }
 
         public virtual RRUser User { get; set; }
-
     }
 }
