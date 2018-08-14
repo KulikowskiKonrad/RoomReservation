@@ -24,9 +24,9 @@ namespace RoomReservation.Controllers
         {
             try
             {
-                RoomRepository roomRepository = new RoomRepository();
-                List<RRRoom> room = roomRepository.DownloadAll();
-                return View("RoomList", room);
+                //RoomRepository roomRepository = new RoomRepository();
+                //List<RRRoom> room = roomRepository.DownloadAll();
+                return View("RoomList");
 
             }
             catch (Exception ex)

@@ -25,24 +25,5 @@ namespace RoomReservation.Models
         [Display(Name = "Data rezerwacji")]
         public DateTime? Date { get; set; }
 
-        public List<SelectListItem> ListaPomieszczen { get; set; }
-
-
-        public EditReservationViewModel()
-        {
-
-            ListaPomieszczen = new List<SelectListItem>();
-            RoomRepository roomRepository = new RoomRepository();
-            List<RRRoom> pobranePomieszczenia = roomRepository.DownloadAll();
-            foreach (RRRoom pomieszczenie in pobranePomieszczenia)
-            {
-                ListaPomieszczen.Add(new SelectListItem()
-                {
-                    Value = pomieszczenie.Id.ToString(),
-                    Text = pomieszczenie.Name
-                });
-            }
-        }
-
     }
 }

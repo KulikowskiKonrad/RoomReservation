@@ -19,12 +19,14 @@ namespace RoomReservation
                         "~/Scripts/ui-bootstrap-tpls-2.5.0.min.js"
                         ));
 
-
             bundles.Add(new ScriptBundle("~/bundles/js/Register").Include(
                       "~/Scripts/Views/User/Register.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/RoomList").Include(
                       "~/Scripts/Views/Room/RoomList.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/ReservationList").Include(
+                             "~/Scripts/Views/Reservation/ReservationList.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

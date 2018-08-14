@@ -1,113 +1,116 @@
-﻿@model List<RoomReservation.DB.Models.RRRoom>
-@Scripts.Render("~/bundles/js/RoomList")
-<script>
-    $(document).ready(function () {
-        $('.btn-usun').click(function () {
-            var btn = $(this);
-            swal({
-                title: 'Na pewno chcesz to usunąć?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Tak,chcę to usunąć!',
-                cancelButtonText: 'Anuluj'
-            }).then(function () {
-                $(btn).closest('form').submit();
-            })
-        });
-    });
-</script>
-<h2>Lista pomieszczeń</h2>
-@if (User.IsInRole("Admin"))
-{
-    @Html.ActionLink("Dodaj pomieszczenie", "RoomDetails", null, new { @class = "btn btn-default" })
-}
-<div class="row" ng-app="RR">
-    <div class="col-sm-12">
-        <table class="table table-striped" style="margin-top:20px;">
-            <tr>
-                <th class="col-sm-4">
-                    Nazwa
-                </th>
-                <th class="col-sm-7">
-                    Szczegóły
-                </th>
-
-                @if (User.IsInRole("Admin"))
-                {
-                    <th></th>
-                    <th>
-                    </th>
-                }
-            </tr>
-            @foreach (RoomReservation.DB.Models.RRRoom pomieszczenie in Model)
-            {
+﻿@Scripts.Render("~/bundles/js/RoomList")
+<div ng-app="RR" ng-controller="RoomListCtrl">
+    <h2>Lista pomieszczeń</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <button ng-click="edit()" class="btn btn-default">Dodaj pomieszczenie</button>
+        @*@Html.ActionLink("Dodaj pomieszczenie", "RoomDetails", null, new { @class = "btn btn-default" })*@
+    }
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-striped" style="margin-top:20px;">
                 <tr>
-                    <td class="col-sm-4">
-                        @pomieszczenie.Name
+                    <th>
+                        Nazwa
+                    </th>
+                    <th>
+                        Szczegóły
+                    </th>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th></th>
+                        <th>
+                        </th>
+                    }
+                </tr>
+                <tr ng-repeat="room in rooms">
+                    <td>
+                        {{room.Name}}
                     </td>
-                    <td class="col-sm-7">
-                        @pomieszczenie.Details
+                    <td>
+                        {{room.Details}}
                     </td>
                     @if (User.IsInRole("Admin"))
                     {
                         <td>
-                            <a href="@Url.Action("RoomDetails", "Room", new { id = pomieszczenie.Id })" class="btn btn-default btn-sm pull-right" title="Edytuj" style="margin-right:10px;"><span class="glyphicon glyphicon-cog"></span></a>
-                            @*to jest zamiana actionLink na a*@
+                            <button type="button" ng-click="edit(room.Id)" title="Usuń" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
+                                <span class="glyphicon glyphicon-user "></span>
+                            </button>
+                            @*<a data-ng-href="@Url.Action("RoomDetails", "Room")/{{room.Id}}" class="btn btn-default btn-sm pull-right"
+                                title="Edytuj" style="margin-right:10px;"><span class="glyphicon glyphicon-cog"></span></a>*@
                         </td>
 
                         <td>
-                            @using (Html.BeginForm("Delete", "Room", FormMethod.Post))
-                            {
-                                @Html.Hidden("id", pomieszczenie.Id)  @*nazwa ma byc tak jak nazwa parametru w kontrolerze , a wartosc pobieramy z konkretnego elementu modelu*@
-                                <button type="button" title="Usuń" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
-                                    <span class="glyphicon glyphicon-trash "></span>
-                                </button>
-                            }
+                            <button type="button" ng-click="delete(room.Id)" title="Usuń" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
+                                <span class="glyphicon glyphicon-trash "></span>
+                            </button>
                         </td>
                     }
                 </tr>
-            }
-        </table>
+            </table>
+        </div>
     </div>
-</div>
 
-@*<div ng-app="RR">
-        <div ng-controller="ModalDemoCtrl as $ctrl" class="modal-demo">
-            <script type="text/ng-template" id="myModalContent.html">
+    <div id="modalRoomDetails" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="modal-title">I'm a modal!</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Detale pomieszczenia</h4>
                 </div>
-                <div class="modal-body" id="modal-body">
-                    <ul>
-                        <li ng-repeat="item in $ctrl.items">
-                            <a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>
-                        </li>
-                    </ul>
-                    Selected: <b>{{ $ctrl.selected.item }}</b>
+                <div class="modal-body">
+                    @using (Html.BeginForm("SaveRoomDetails", "Room", FormMethod.Post, new { name = "formSaveRoomDetails" }))
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Nazwa</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
+                                        @Html.TextBox("Name", "", new
+                                   {
+                                       @class = "form-control",
+                                       placeholder = "Nazwa",
+                                       ng_model = "editedRoom.Name",
+                                       required = "required"
+                                   })
+                                    </div>
+                                    <div class="text-danger" ng-show="formSaveRoomDetails.editedRoom.Name.$touched && formSaveRoomDetails.editedRoom.Name.$invalid">
+                                        Niepoprawna wartość
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Szczegóły</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
+                                        @Html.TextBox("Details", "", new
+                                   {
+                                       @class = "form-control",
+                                       placeholder = "Szczegóły",
+                                       ng_model = "editedRoom.Details",
+                                       required = "required"
+                                   })
+                                    </div>
+                                    <div class="text-danger" ng-show="formSaveRoomDetails.editedRoom.Details.$touched && formSaveRoomDetails.editedRoom.Details.$invalid">
+                                        Niepoprawna wartość
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
-                    <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+                    <button type="button" class="btn btn-default btn-usun" ng-click="saveDetails()">Zapisz</button>
+                    <button type="button" class="btn btn-default btn-usun" ng-click="cancelEdit()">Anuluj</button>
+                    @*                    @Html.ActionLink("Anuluj", "RoomList", "Room", null, new { @class = "btn btn-default" })*@
                 </div>
-            </script>
-
-            <button type="button" class="btn btn-default" ng-click="$ctrl.open()">Open me!</button>
-            <button type="button" class="btn btn-default" ng-click="$ctrl.open('lg')">Large modal</button>
-            <button type="button" class="btn btn-default" ng-click="$ctrl.open('sm')">Small modal</button>
-            <button type="button"
-                        class="btn btn-default"
-                        ng-click="$ctrl.open('sm', '.modal-parent')">
-                    Modal appended to a custom parent
-                </button>
-                <button type="button" class="btn btn-default" ng-click="$ctrl.toggleAnimation()">Toggle Animation ({{ $ctrl.animationsEnabled }})</button>
-                <button type="button" class="btn btn-default" ng-click="$ctrl.openComponentModal()">Open a component modal!</button>
-                <button type="button" class="btn btn-default" ng-click="$ctrl.openMultipleModals()">
-                    Open multiple modals at once
-                </button>
-                <div ng-show="$ctrl.selected">Selection from a modal: {{ $ctrl.selected }}</div>
-                <div class="modal-parent">
-                </div>
-        </div>
-    </div>*@
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>

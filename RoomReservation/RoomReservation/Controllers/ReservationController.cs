@@ -33,17 +33,7 @@ namespace RoomReservation.Controllers
         {
             try
             {
-                List<RRReservation> rRReservation = new List<RRReservation>();
-                ReservationRepository reservationRepository = new ReservationRepository();
-                if (User.IsInRole("Admin"))
-                {
-                    rRReservation = reservationRepository.GetAll(null);
-                }
-                else
-                {
-                    rRReservation = reservationRepository.GetAll(UserId);
-                }
-                return View(rRReservation);
+                return View(new ReservationListViewModel());
             }
             catch (Exception ex)
             {
