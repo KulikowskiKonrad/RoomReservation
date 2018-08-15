@@ -15,15 +15,21 @@ namespace RoomReservation
                         "~/Scripts/moment-with-locales.js",
                         "~/Scripts/sweetalert2.js",
                         "~/Scripts/angular.min.js",
+                        "~/Scripts/calendar.js",
                         "~/Scripts/bootstrap-datetimepicker.js",
-                        "~/Scripts/ui-bootstrap-tpls-2.5.0.min.js"
+                        "~/Scripts/ui-bootstrap-tpls-2.5.0.min.js",
+                        "~/Scripts/fullcalendar.js",
+                        "~/Scripts/locale-all.js"
                         ));
-
-            bundles.Add(new ScriptBundle("~/bundles/js/Register").Include(
-                      "~/Scripts/Views/User/Register.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/RoomList").Include(
                       "~/Scripts/Views/Room/RoomList.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/Register").Include(
+            "~/Scripts/Views/User/Register.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/UserIndex").Include(
+                      "~/Scripts/Views/User/Index.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/ReservationList").Include(
                              "~/Scripts/Views/Reservation/ReservationList.js"));
@@ -32,6 +38,7 @@ namespace RoomReservation
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-datetimepicker.css",
                       "~/Content/sweetalert2.css",
+                      "~/Content/fullcalendar.css",
                       "~/Content/site.css"));
         }
     }

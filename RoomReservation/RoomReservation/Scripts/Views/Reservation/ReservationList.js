@@ -1,12 +1,17 @@
 ﻿var app = angular.module('RR', []);
 app.controller('ReservationListCtrl', function ($scope, $http) {
     $scope.loadList = function () {
-        $http.get("/api/ApiReservation/GetAll")
+        let roomId = ($scope.filteredRoom != null ? $scope.filteredRoom.Id : '');
+        $http.get("/api/ApiReservation/GetAll?roomId=" + roomId)
             .then(function (res, status, xhr) {
                 $scope.reservations = res.data;
             });
     }
     $scope.loadList();
+
+    $scope.$watchCollection('filteredRoom', function () {
+        $scope.loadList();
+    });
 
     $scope.loadRoomList = function () {
         $http.get("/api/ApiRoom/GetAll")
@@ -27,6 +32,34 @@ app.controller('ReservationListCtrl', function ($scope, $http) {
             cancelButtonText: 'Anuluj'
         }).then(function () {
             $http.delete("/api/ApiReservation/Delete/?id=" + reservationId)
+                .then(function (response) {
+                    $scope.loadList();
+                })
+                .catch(function (data, status) {
+                    swal({
+                        title: data.data,
+                        type: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok!',
+                    });
+                });
+        })
+    }
+
+    $scope.changeStatus = function (status, reservationId) {
+        swal({
+            title: 'Na pewno chcesz zmienić status?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Tak,chcę!',
+            cancelButtonText: 'Anuluj'
+        }).then(function () {
+            $http.post("/api/ApiReservation/ChangeStatus", {
+                Id: reservationId,
+                Status: status
+            })
                 .then(function (response) {
                     $scope.loadList();
                 })
@@ -70,26 +103,33 @@ app.controller('ReservationListCtrl', function ($scope, $http) {
     }
 
     $scope.saveDetails = function () {
-        debugger;
-        $http.post("/api/ApiReservation/SaveReservationDetails",
-            {
-                Id: $scope.editedReservation.Id,
-                Date: $scope.editedReservation.Date,
-                RoomId: $scope.selectedRoom.Id
+        angular.forEach($scope.formSaveReservationDetails.$error, function (field) {
+            angular.forEach(field, function (errorField) {
+                errorField.$setTouched();
             })
-            .then(function (response) {
-                $scope.editReservation = null;
-                $('#modalReservationDetails').modal('hide');
-                $scope.loadList();
-            })
-            .catch(function (data, status) {
-                swal({
-                    title: data.data,
-                    type: 'error',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok!',
+        });
+
+        if ($scope.formSaveReservationDetails.$valid) {
+            $http.post("/api/ApiReservation/SaveReservationDetails",
+                {
+                    Id: $scope.editedReservation.Id,
+                    Date: $scope.editedReservation.Date,
+                    RRRoomId: $scope.selectedRoom.Id
+                })
+                .then(function (response) {
+                    $scope.editReservation = null;
+                    $('#modalReservationDetails').modal('hide');
+                    $scope.loadList();
+                })
+                .catch(function (data, status) {
+                    swal({
+                        title: data.data.Message,
+                        type: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok!',
+                    });
                 });
-            });
+        }
     }
 })
     .directive('date', function (dateFilter) {

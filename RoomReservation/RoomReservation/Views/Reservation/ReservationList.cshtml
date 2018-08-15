@@ -3,8 +3,19 @@
 <div ng-app="RR" ng-controller="ReservationListCtrl">
 
     <h2>Lista rezerwacji</h2>
-
-    <button ng-click="edit()">Dodaj rezerwacje</button>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></div>
+                    <select class="form-control" data-ng-options="o.Name for o in rooms track by o.Id" ng-model="filteredRoom">
+                        <option value="">Wybierz pomieszczenie</option>
+                    </select>
+                </div>
+            </div>
+            <button ng-click="edit()" class="btn btn-default">Dodaj rezerwacje</button>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-sm-12">
@@ -20,14 +31,13 @@
                     <th>
                         Status
                     </th>
-                    <th></th>
-                    <th></th>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <th></th>
-                    }
+                    <th style="width: 20px;"></th>
+                    <th style="width: 20px;"></th>
+                    <th style="width: 100px;"></th>
                 </tr>
+
                 <tr ng-repeat="reservation in reservations">
+
                     <td>
                         {{reservation.RoomName}}
                     </td>
@@ -45,14 +55,33 @@
                         <button type="button" ng-click="edit(reservation.Id)" title="Edytuj" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
                             <span class="glyphicon glyphicon-cog "></span>
                         </button>
-                        @*<a data-ng-href="@Url.Action("RoomDetails", "Room")/{{reservation.Id}}" class="btn btn-default btn-sm pull-right"
-                            title="Edytuj" style="margin-right:10px;"><span class="glyphicon glyphicon-cog"></span></a>*@
                     </td>
 
                     <td>
-                        <button type="button" ng-click="delete(reservation.Id)" title="Usuń" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
-                            <span class="glyphicon glyphicon-trash "></span>
-                        </button>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <button type="button" ng-click="delete(reservation.Id)" title="Usuń" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
+                                <span class="glyphicon glyphicon-trash "></span>
+                            </button>
+                        }
+                    </td>
+                    <td>
+                        <div ng-if="reservation.Status==1">
+                            @using (Html.BeginForm("ChangeStatus", "Reservation", FormMethod.Post))
+                            {
+                                <button type="button" ng-click="changeStatus(@((byte)ReservationStatus.Rejected), reservation.Id)"
+                                        title="Odrzuć" class="btn btn-default btn-sm btn-odrzuc pull-right">
+                                    <span class="glyphicon glyphicon-remove "></span>
+                                </button>
+                            }
+                            @using (Html.BeginForm("ChangeStatus", "Reservation", FormMethod.Post))
+                            {
+                                <button type="button" title="Akceptuj" ng-click="changeStatus(@((byte)ReservationStatus.Accepted), reservation.Id)"
+                                        class="btn btn-default btn-sm btn-akceptuj pull-right">
+                                    <span class="glyphicon glyphicon-ok "></span>
+                                </button>
+                            }
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -70,14 +99,14 @@
                         <h4 class="modal-title">Detale rezerwacji</h4>
                     </div>
                     <div class="modal-body">
-                        @using (Html.BeginForm("SaveReservationDetails", "Reservation", FormMethod.Post, new { name = "formSaveRoomDetails" }))
+                        @using (Html.BeginForm("SaveReservationDetails", "Reservation", FormMethod.Post, new { name = "formSaveReservationDetails" }))
                         {
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Pomieszczenie</label>
                                         <div class="input-group">
-                                            <div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
+                                            <div class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></div>
                                             <select class="form-control" data-ng-options="o.Name for o in rooms track by o.Id" ng-model="selectedRoom" required>
                                                 <option value="">Wybierz pomieszczenie</option>
                                                 @*<option ng-repeat="room in data.rooms"  value="{{room.Id}}>{{option.Name}}</option>*@

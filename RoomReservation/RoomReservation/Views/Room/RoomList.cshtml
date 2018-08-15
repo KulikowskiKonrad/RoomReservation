@@ -34,8 +34,8 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <td>
-                            <button type="button" ng-click="edit(room.Id)" title="Usuń" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
-                                <span class="glyphicon glyphicon-user "></span>
+                            <button type="button" ng-click="edit(room.Id)" title="Edytuj" class="btn btn-default btn-sm btn-usun  pull-right" style="margin-right:5px">
+                                <span class="glyphicon glyphicon-cog "></span>
                             </button>
                             @*<a data-ng-href="@Url.Action("RoomDetails", "Room")/{{room.Id}}" class="btn btn-default btn-sm pull-right"
                                 title="Edytuj" style="margin-right:10px;"><span class="glyphicon glyphicon-cog"></span></a>*@
@@ -88,8 +88,8 @@
                                 <div class="form-group">
                                     <label>Szczegóły</label>
                                     <div class="input-group">
-                                        <div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
-                                        @Html.TextBox("Details", "", new
+                                        <div class="input-group-addon"><span class="glyphicon glyphicon-info-sign" style="resize:none;" aria-hidden="true"></span></div>
+                                        @Html.TextArea("Details", "", new
                                    {
                                        @class = "form-control",
                                        placeholder = "Szczegóły",

@@ -12,14 +12,17 @@ namespace RoomReservation.Repositories
     public class ReservationRepository
     {
 
-        public List<RRReservation> GetAll(long? userId)
+        public List<RRReservation> GetAll(long? userId, long? roomId)
         {
             try
             {
                 List<RRReservation> listaRezerwacji = null;
                 using (RoomReservationContext baza = new RoomReservationContext())
                 {
-                    listaRezerwacji = baza.Reservation.Include(x => x.Room).Include(y => y.User).Where(x => x.IsDeleted == false && (x.RRUserId == userId || userId == null)).ToList();
+                    listaRezerwacji = baza.Reservation.Include(x => x.Room).Include(y => y.User)
+                        .Where(x => x.IsDeleted == false && (x.RRUserId == userId || userId == null)
+                            && (!roomId.HasValue || x.RRRoomId == roomId))
+                        .ToList();
                     return listaRezerwacji;
                 }
             }
@@ -29,7 +32,24 @@ namespace RoomReservation.Repositories
                 return null;
             }
         }
+        public RRReservation GetByIdDate(long? roomId, DateTime date)
+        {
+            try
+            {
+                RRReservation reservation = new RRReservation();
+                using (RoomReservationContext baza = new RoomReservationContext())
+                {
+                    reservation = baza.Reservation.Where(x => x.RRRoomId == roomId && x.Date == date && x.IsDeleted == false).SingleOrDefault();
+                    return reservation;
+                }
+            }
+            catch (Exception ex)
+            {
 
+                LogHelper.Log.Error(ex);
+                return null;
+            }
+        }
         public RRReservation GetById(long rezerwacjaId)
         {
             try

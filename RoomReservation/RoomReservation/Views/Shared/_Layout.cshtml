@@ -12,9 +12,15 @@
             $('.input-group.date-time').datetimepicker({
                 locale: 'pl'
             });
+
+
+
             $('.input-group.date').datetimepicker({
                 locale: 'pl',
                 format: 'YYYY-MM-DD'
+            });
+            $('.input-group.date').on("dp.change", function (e) {
+                $(this).find('input').val(e.date.format('YYYY-MM-DD')).trigger('change');
             });
         });
     </script>

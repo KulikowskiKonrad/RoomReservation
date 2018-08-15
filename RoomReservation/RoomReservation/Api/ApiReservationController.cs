@@ -24,17 +24,21 @@ namespace RoomReservation.Api
             }
         }
         [HttpGet]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(long? roomId)
         {
-            List<ReservationListItem> result = _reservationRepository.GetAll(UserId).Select(x => new ReservationListItem()
-            {
-                Date = x.Date,
-                Id = x.Id,
-                StatusText = x.Status.ToString(),
-                RoomName = x.Room.Name,
-                UserEmail = x.User.Email,
-                RoomId = x.RRRoomId
-            }).ToList();
+            List<ReservationListItem> result = _reservationRepository.GetAll(UserId, roomId)
+                .Select(x => new ReservationListItem()
+                {
+                    Date = x.Date,
+                    Id = x.Id,
+                    Status = x.Status,
+                    StatusText = x.Status.ToString(),
+                    RoomName = x.Room.Name,
+                    UserEmail = x.User.Email,
+                    RoomId = x.RRRoomId
+                })
+            .OrderByDescending(x => x.Date)
+            .ToList();
             return Ok(result);
         }
 
@@ -75,6 +79,11 @@ namespace RoomReservation.Api
                     reservation.Date = model.Date.Value;
                     reservation.RRRoomId = model.RRRoomId.Value;
                     reservation.RRUserId = UserId;
+                    RRReservation existingReservation = reservationRepository.GetByIdDate(model.RRRoomId, model.Date.Value);
+                    if (existingReservation != null && existingReservation.Id != model.Id)
+                    {
+                        return BadRequest("Pomieszczenie jest już zarezerwowane!");
+                    }
                     long? rezultatZapisu = reservationRepository.Save(reservation);
                     if (rezultatZapisu == null)
                     {
@@ -97,5 +106,44 @@ namespace RoomReservation.Api
             }
         }
 
+        [HttpPost]
+        public IHttpActionResult ChangeStatus(ChangeStatus model)
+        {
+            try
+            {
+                if (ModelState.IsValid == true)
+                {
+                    ReservationRepository reservationRepository = new ReservationRepository();
+                    RRReservation reservation = reservationRepository.GetById(model.Id);
+                    reservation.Status = model.Status;
+                    reservationRepository.Save(reservation);
+                    return Ok();
+                }
+                else
+                {
+                    return InternalServerError();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log.Error(ex);
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetCalendarItems(long? roomId)
+        {
+            List<CalendarItem> result = _reservationRepository.GetAll(UserId, roomId)
+                .Where(x => x.Status != Enum.ReservationStatus.Rejected)
+                .Select(x => new CalendarItem()
+                {
+                    Date = x.Date,
+                    Title = x.Room.Name
+                })
+            .OrderByDescending(x => x.Date)
+            .ToList();
+            return Ok(result);
+        }
     }
 }
