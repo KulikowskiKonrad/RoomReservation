@@ -12,6 +12,10 @@ using Microsoft.Owin.Security;
 using RoomReservation.DB.Models;
 using RoomReservation.Enum;
 using System.Net;
+using System.Security.Claims;
+using Microsoft.Owin.Security.OAuth;
+using static RoomReservation.Startup;
+using System.Threading.Tasks;
 
 namespace RoomReservation.Controllers
 {
@@ -21,58 +25,6 @@ namespace RoomReservation.Controllers
         {
             return View();
         }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public ActionResult Edytuj()
-        {
-            try
-            {
-                return View();
-            }
-            catch (Exception ex)
-            {
-                LogHelper.Log.Error(ex);
-                return View("Error");
-            }
-        }
-
-
-
-        //[HttpPost]
-        //[Authorize(Roles = "Admion")]
-        //public ActionResult Edytuj(EdytujUzytkownikaViewModel model)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid == true)
-        //        {
-        //            UzytkownikRepozytorium uzytkownikRepozytorium = new UzytkownikRepozytorium();
-        //            Uzytkownik uzytkownik = uzytkownikRepozytorium.Pobierz(((Uzytkownik)Session["uzytkownik"]).Id);
-        //            string sol = Guid.NewGuid().ToString();
-        //            uzytkownik.Sol = sol;
-        //            uzytkownik.Haslo = MD5Helper.GenerujMD5(model.Haslo + sol);
-        //            long? rezultatEdycji = uzytkownikRepozytorium.Zapisz(uzytkownik);
-        //            if (rezultatEdycji != null)
-        //            {
-        //                return RedirectToAction("Index", "Home");
-        //            }
-        //            else
-        //            {
-        //                return View("Error");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return View("Edytuj", model);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogHelper.Log.Error(ex);
-        //        return View("Error");
-        //    }
-        //}
 
         [HttpGet]
         public ActionResult Login()
@@ -131,56 +83,6 @@ namespace RoomReservation.Controllers
             return View("Register");
         }
 
-        //[HttpPost]
-        //public ActionResult Register(RegisterViewModel model)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid == true)
-        //        {
-        //            UserRepository uzytkownikRepozytorium = new UserRepository();
-        //            RRUser pobranyUzytkownik = uzytkownikRepozytorium.Pobierz(model.Email);
-        //            if (pobranyUzytkownik == null)
-        //            {
-        //                string sol = Guid.NewGuid().ToString(); //robie sol jako GUID i zamieniam na string
-
-        //                RRUser uzytkownik = new RRUser()
-        //                {
-        //                    Salt = sol,
-        //                    Email = model.Email,
-        //                    Password = MD5Helper.GenerateMD5(model.Password + sol), //generujemy md5 z polaczenia hasla i soli (losowego ciagu znakow) wywoluje metode statyczna z klasy
-        //                                                                            //MD5Helper
-        //                    Role = UserRole.Standard
-        //                };
-        //                long? rezultatZapisu = uzytkownikRepozytorium.Zapisz(uzytkownik);
-        //                if (rezultatZapisu != null)
-        //                {
-        //                    return RedirectToAction("Login", "Account");
-        //                }
-        //                else
-        //                {
-        //                    return View("Error");
-        //                }
-        //            }
-        //            else
-        //            {
-        //                ModelState.AddModelError("Login", "Login jest już zajęty");
-        //                return View("Register", model);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return View("Register", model);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogHelper.Log.Error(ex);
-        //        return View("Error");
-        //    }
-
-        //}
-
         [HttpPost]
         public ActionResult LogOff()
         {
@@ -205,6 +107,44 @@ namespace RoomReservation.Controllers
                 LogHelper.Log.Error(ex);
                 return View("Error");
             }
+        }
+
+
+        [HttpPost]
+        public ActionResult ExternalLogin(string provider)
+        {
+            // Request a redirect to the external login provider
+            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback"));
+        }
+
+        public async Task<ActionResult> ExternalLoginCallback()
+        {
+            var loginInfo = await HttpContext.GetOwinContext().Authentication.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+
+            var result = new ApplicationSignInManager(HttpContext.GetOwinContext()).ExternalLogin(loginInfo.Email);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Index", "Home");
+
+                case SignInStatus.LockedOut:
+                case SignInStatus.RequiresVerification:
+                case SignInStatus.Failure:
+                default:
+                    return RedirectToAction("Login");
+            }
+        }
+
+        [AllowAnonymous]
+        public ActionResult ExternalLoginFailure()
+        {
+            return View();
         }
     }
 }

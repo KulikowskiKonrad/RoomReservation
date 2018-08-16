@@ -51,25 +51,33 @@ app.controller('RoomListCtrl', function ($scope, $http) {
     }
 
     $scope.saveDetails = function () {
-        $http.post("/api/ApiRoom/SaveDetails",
-            {
-                Id: $scope.editedRoom.Id,
-                Name: $scope.editedRoom.Name,
-                Details: $scope.editedRoom.Details
+        angular.forEach($scope.formSaveRoomDetails.$error, function (field) {
+            angular.forEach(field, function (errorField) {
+                errorField.$setTouched();
             })
-            .then(function (response) {
-                $scope.editedRoom = null;
-                $('#modalRoomDetails').modal('hide');
-                $scope.loadList();
-            })
-            .catch(function (data, status) {
-                swal({
-                    title: data.data,
-                    type: 'error',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok!',
+        });
+
+        if ($scope.formSaveRoomDetails.$valid) {
+            $http.post("/api/ApiRoom/SaveDetails",
+                {
+                    Id: $scope.editedRoom.Id,
+                    Name: $scope.editedRoom.Name,
+                    Details: $scope.editedRoom.Details
+                })
+                .then(function (response) {
+                    $scope.editedRoom = null;
+                    $('#modalRoomDetails').modal('hide');
+                    $scope.loadList();
+                })
+                .catch(function (data, status) {
+                    swal({
+                        title: data.data,
+                        type: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok!',
+                    });
                 });
-            });
+        }
     }
 
 

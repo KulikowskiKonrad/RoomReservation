@@ -12,24 +12,24 @@ namespace RoomReservation.Repositories
     public class UserRepository
     {
 
-        public RRUser Pobierz(string email, string haslo)
+        public RRUser GetByEmailPassword(string email, string password)
         {
             try
             {
-                RRUser rezultat = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                RRUser result = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    rezultat = baza.Users.Where(x => x.Email == email).SingleOrDefault();
+                    result = db.Users.Where(x => x.Email == email).SingleOrDefault();
                 }
-                if (rezultat != null)
+                if (result != null)
                 {
-                    string hasloZakodowane = MD5Helper.GenerateMD5(haslo + rezultat.Salt);
-                    if (hasloZakodowane != rezultat.Password)
+                    string encodedPassword = MD5Helper.GenerateMD5(password + result.Salt);
+                    if (encodedPassword != result.Password)
                     {
-                        rezultat = null;
+                        result = null;
                     }
                 }
-                return rezultat;
+                return result;
             }
             catch (Exception ex)
             {
@@ -38,16 +38,16 @@ namespace RoomReservation.Repositories
             }
         }
 
-        public RRUser Pobierz(string email)
+        public RRUser GetByLogin(string email)
         {
             try
             {
-                RRUser rezultat = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                RRUser result = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    rezultat = baza.Users.Where(x => x.Email == email).SingleOrDefault();
+                    result = db.Users.Where(x => x.Email == email).SingleOrDefault();
                 }
-                return rezultat;
+                return result;
             }
             catch (Exception ex)
             {
@@ -56,16 +56,16 @@ namespace RoomReservation.Repositories
             }
         }
 
-        public RRUser Pobierz(long uzytkownikId)
+        public RRUser GetById(long userId)
         {
             try
             {
-                RRUser rezultat = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                RRUser result = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    rezultat = baza.Users.Where(x => x.Id == uzytkownikId).SingleOrDefault();
+                    result = db.Users.Where(x => x.Id == userId).SingleOrDefault();
                 }
-                return rezultat;
+                return result;
             }
             catch (Exception ex)
             {
@@ -74,18 +74,18 @@ namespace RoomReservation.Repositories
             }
         }
 
-        public long? Zapisz(RRUser rUser)
+        public long? Save(RRUser rUser)
         {
             try
             {
-                long? rezultat = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                long? result = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    baza.Entry(rUser).State = rUser.Id > 0 ? EntityState.Modified : EntityState.Added;
-                    baza.SaveChanges();
-                    rezultat = rUser.Id;
+                    db.Entry(rUser).State = rUser.Id > 0 ? EntityState.Modified : EntityState.Added;
+                    db.SaveChanges();
+                    result = rUser.Id;
                 }
-                return rezultat;
+                return result;
             }
             catch (Exception ex)
             {

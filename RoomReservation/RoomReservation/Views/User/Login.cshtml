@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <p>
-                    @Html.ActionLink("Jeżeli nie masz konta, zaresjestruj się", "Register")
+                    @Html.ActionLink("Jeżeli nie masz konta, zarejestruj się", "Register")
                 </p>
                 @* Enable this once you have account confirmation enabled for password reset functionality
                     <p>
@@ -57,7 +57,8 @@
             </section>
         </div>*@
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<div class=" row">
+    <div class="col-sm-5 col-md-3">
+        @Html.Partial("_ExternalLogin")
+    </div>
+</div>

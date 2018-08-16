@@ -66,22 +66,25 @@
                         }
                     </td>
                     <td>
-                        <div ng-if="reservation.Status==1">
-                            @using (Html.BeginForm("ChangeStatus", "Reservation", FormMethod.Post))
-                            {
-                                <button type="button" ng-click="changeStatus(@((byte)ReservationStatus.Rejected), reservation.Id)"
-                                        title="Odrzuć" class="btn btn-default btn-sm btn-odrzuc pull-right">
-                                    <span class="glyphicon glyphicon-remove "></span>
-                                </button>
-                            }
-                            @using (Html.BeginForm("ChangeStatus", "Reservation", FormMethod.Post))
-                            {
-                                <button type="button" title="Akceptuj" ng-click="changeStatus(@((byte)ReservationStatus.Accepted), reservation.Id)"
-                                        class="btn btn-default btn-sm btn-akceptuj pull-right">
-                                    <span class="glyphicon glyphicon-ok "></span>
-                                </button>
-                            }
-                        </div>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div ng-if="reservation.Status==1">
+                                @using (Html.BeginForm("ChangeStatus", "Reservation", FormMethod.Post))
+                                {
+                                    <button type="button" ng-click="changeStatus(@((byte)ReservationStatus.Rejected), reservation.Id)"
+                                            title="Odrzuć" class="btn btn-default btn-sm btn-odrzuc pull-right">
+                                        <span class="glyphicon glyphicon-remove "></span>
+                                    </button>
+                                }
+                                @using (Html.BeginForm("ChangeStatus", "Reservation", FormMethod.Post))
+                                {
+                                    <button type="button" title="Akceptuj" ng-click="changeStatus(@((byte)ReservationStatus.Accepted), reservation.Id)"
+                                            class="btn btn-default btn-sm btn-akceptuj pull-right">
+                                        <span class="glyphicon glyphicon-ok "></span>
+                                    </button>
+                                }
+                            </div>
+                        }
                     </td>
                 </tr>
             </table>

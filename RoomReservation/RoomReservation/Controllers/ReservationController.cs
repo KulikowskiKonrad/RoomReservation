@@ -121,7 +121,7 @@ namespace RoomReservation.Controllers
                 if (ModelState.IsValid == true)
                 {
                     ReservationRepository reservationRepository = new ReservationRepository();
-                    bool rezultatUsuniecia = reservationRepository.Delete(id);
+                    bool deleteResult = reservationRepository.Delete(id);
                     return RedirectToAction("ReservationList");
                 }
                 else
@@ -135,32 +135,5 @@ namespace RoomReservation.Controllers
                 return View("Error");
             }
         }
-
-        //[Authorize]
-        //[HttpPost]
-        //public ActionResult ChangeStatus(RoomReservation.Models.ChangeStatus model)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid == true)
-        //        {
-        //            ReservationRepository reservationRepository = new ReservationRepository();
-        //            RRReservation reservation = reservationRepository.GetById(model.Id);
-        //            reservation.Status = model.Status;
-        //            reservationRepository.Save(reservation);
-        //            return RedirectToAction("ReservationList");
-        //        }
-        //        else
-        //        {
-        //            return View("Error");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogHelper.Log.Error(ex);
-        //        return View("Error");
-        //    }
-        //}
-
     }
 }

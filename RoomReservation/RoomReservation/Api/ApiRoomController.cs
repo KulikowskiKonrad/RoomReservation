@@ -18,27 +18,43 @@ namespace RoomReservation.Api
         [HttpGet]
         public IHttpActionResult GetAll()
         {
-            List<RoomListItem> result = _roomRepository.DownloadAll().Select(x => new RoomListItem()
+            try
             {
-                Details = x.Details,
-                Id = x.Id,
-                Name = x.Name
-            }).ToList();
-            return Ok(result);
+                List<RoomListItem> result = _roomRepository.DownloadAll().Select(x => new RoomListItem()
+                {
+                    Details = x.Details,
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log.Error(ex);
+                return InternalServerError();
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult Delete([FromUri]long id)
         {
-            RRRoom roomToDelete = _roomRepository.Download(id);
-            roomToDelete.IsDeleted = true;
-            long? saveResult = _roomRepository.Save(roomToDelete);
-            if (saveResult.HasValue)
+            try
             {
-                return Ok();
+                RRRoom roomToDelete = _roomRepository.Download(id);
+                roomToDelete.IsDeleted = true;
+                long? saveResult = _roomRepository.Save(roomToDelete);
+                if (saveResult.HasValue)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return InternalServerError();
+                }
             }
-            else
+            catch (Exception ex)
             {
+                LogHelper.Log.Error(ex);
                 return InternalServerError();
             }
         }

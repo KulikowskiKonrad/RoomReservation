@@ -16,11 +16,11 @@ namespace RoomReservation.Repositories
         {
             try
             {
-                List<RRRoom> listaPomieszczen = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                List<RRRoom> roomList = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    listaPomieszczen = baza.Rooms.Where(x => x.IsDeleted == false).ToList();
-                    return listaPomieszczen;
+                    roomList = db.Rooms.Where(x => x.IsDeleted == false).ToList();
+                    return roomList;
                 }
             }
             catch (Exception ex)
@@ -30,15 +30,15 @@ namespace RoomReservation.Repositories
             }
         }
 
-        public RRRoom Download(long pomieszczenieId)
+        public RRRoom Download(long roomId)
         {
             try
             {
-                RRRoom rezultat = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                RRRoom result = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    rezultat = baza.Rooms.Where(x => x.Id == pomieszczenieId).SingleOrDefault();
-                    return rezultat;
+                    result = db.Rooms.Where(x => x.Id == roomId).SingleOrDefault();
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -48,18 +48,18 @@ namespace RoomReservation.Repositories
             }
         }
 
-        public long? Save(RRRoom pomieszczenie)
+        public long? Save(RRRoom room)
         {
             try
             {
-                long? rezultat = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                long? result = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    baza.Entry(pomieszczenie).State = pomieszczenie.Id > 0 ? EntityState.Modified : EntityState.Added;
-                    baza.SaveChanges();
-                    rezultat = pomieszczenie.Id;
+                    db.Entry(room).State = room.Id > 0 ? EntityState.Modified : EntityState.Added;
+                    db.SaveChanges();
+                    result = room.Id;
                 }
-                return rezultat;
+                return result;
             }
             catch (Exception ex)
             {
@@ -72,16 +72,16 @@ namespace RoomReservation.Repositories
         {
             try
             {
-                bool rezultat = false;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                bool result = false;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
                     RRRoom rRRoom = null;
-                    rRRoom = baza.Rooms.Where(x => x.Id == id).Single();
+                    rRRoom = db.Rooms.Where(x => x.Id == id).Single();
                     rRRoom.IsDeleted = true;
-                    baza.SaveChanges();
-                    rezultat = true;
+                    db.SaveChanges();
+                    result = true;
                 }
-                return rezultat;
+                return result;
             }
             catch (Exception ex)
             {

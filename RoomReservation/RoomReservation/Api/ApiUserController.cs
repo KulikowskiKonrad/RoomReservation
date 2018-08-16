@@ -12,7 +12,7 @@ using System.Web.Http;
 
 namespace RoomReservation.Api
 {
-    public class ApiUserController : ApiBaseController
+    public class ApiUserController : ApiController
     {
         private UserRepository _userRepository = new UserRepository();
 
@@ -23,20 +23,20 @@ namespace RoomReservation.Api
             {
                 if (ModelState.IsValid)
                 {
-                    RRUser pobranyUzytkownik = _userRepository.Pobierz(model.Email);
+                    RRUser pobranyUzytkownik = _userRepository.GetByLogin(model.Email);
                     if (pobranyUzytkownik == null)
                     {
-                        string salt = Guid.NewGuid().ToString(); //robie sol jako GUID i zamieniam na string
+                        string salt = Guid.NewGuid().ToString();
 
                         RRUser uzytkownik = new RRUser()
                         {
                             Salt = salt,
                             Email = model.Email,
-                            Password = MD5Helper.GenerateMD5(model.Password + salt), //generujemy md5 z polaczenia hasla i soli (losowego ciagu znakow) wywoluje metode statyczna z klasy
-                                                                                     //MD5Helper
+                            Password = MD5Helper.GenerateMD5(model.Password + salt),
+
                             Role = UserRole.Standard
                         };
-                        long? registeredUserId = _userRepository.Zapisz(uzytkownik);
+                        long? registeredUserId = _userRepository.Save(uzytkownik);
                         if (registeredUserId != null)
                         {
                             return Ok(registeredUserId);
@@ -60,7 +60,6 @@ namespace RoomReservation.Api
             {
                 LogHelper.Log.Error(ex);
                 return InternalServerError();
-                //return Content(HttpStatusCode.BadRequest, "Any object");
             }
         }
     }

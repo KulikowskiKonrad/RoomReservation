@@ -16,14 +16,14 @@ namespace RoomReservation.Repositories
         {
             try
             {
-                List<RRReservation> listaRezerwacji = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                List<RRReservation> reservationList = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    listaRezerwacji = baza.Reservation.Include(x => x.Room).Include(y => y.User)
+                    reservationList = db.Reservation.Include(x => x.Room).Include(y => y.User)
                         .Where(x => x.IsDeleted == false && (x.RRUserId == userId || userId == null)
                             && (!roomId.HasValue || x.RRRoomId == roomId))
                         .ToList();
-                    return listaRezerwacji;
+                    return reservationList;
                 }
             }
             catch (Exception ex)
@@ -37,9 +37,9 @@ namespace RoomReservation.Repositories
             try
             {
                 RRReservation reservation = new RRReservation();
-                using (RoomReservationContext baza = new RoomReservationContext())
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    reservation = baza.Reservation.Where(x => x.RRRoomId == roomId && x.Date == date && x.IsDeleted == false).SingleOrDefault();
+                    reservation = db.Reservation.Where(x => x.RRRoomId == roomId && x.Date == date && x.IsDeleted == false).SingleOrDefault();
                     return reservation;
                 }
             }
@@ -50,15 +50,15 @@ namespace RoomReservation.Repositories
                 return null;
             }
         }
-        public RRReservation GetById(long rezerwacjaId)
+        public RRReservation GetById(long reservationId)
         {
             try
             {
-                RRReservation rezultat = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                RRReservation result = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    rezultat = baza.Reservation.Where(x => x.Id == rezerwacjaId).SingleOrDefault();
-                    return rezultat;
+                    result = db.Reservation.Where(x => x.Id == reservationId).SingleOrDefault();
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -68,18 +68,18 @@ namespace RoomReservation.Repositories
             }
         }
 
-        public long? Save(RRReservation rezerwacja)
+        public long? Save(RRReservation reservation)
         {
             try
             {
-                long? rezultat = null;
-                using (RoomReservationContext baza = new RoomReservationContext())
+                long? result = null;
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
-                    baza.Entry(rezerwacja).State = rezerwacja.Id > 0 ? EntityState.Modified : EntityState.Added;
-                    baza.SaveChanges();
-                    rezultat = rezerwacja.Id;
+                    db.Entry(reservation).State = reservation.Id > 0 ? EntityState.Modified : EntityState.Added;
+                    db.SaveChanges();
+                    result = reservation.Id;
                 }
-                return rezultat;
+                return result;
             }
             catch (Exception ex)
             {
@@ -90,18 +90,18 @@ namespace RoomReservation.Repositories
 
         public bool Delete(long id)
         {
-            bool rezultat = false;
+            bool result = false;
             try
             {
-                using (RoomReservationContext baza = new RoomReservationContext())
+                using (RoomReservationContext db = new RoomReservationContext())
                 {
                     RRReservation reservation = null;
-                    reservation = baza.Reservation.Where(x => x.Id == id).Single();
+                    reservation = db.Reservation.Where(x => x.Id == id).Single();
                     reservation.IsDeleted = true;
-                    baza.SaveChanges();
-                    rezultat = true;
+                    db.SaveChanges();
+                    result = true;
                 }
-                return rezultat;
+                return result;
             }
             catch (Exception ex)
             {
