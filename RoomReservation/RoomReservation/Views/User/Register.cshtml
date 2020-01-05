@@ -5,10 +5,10 @@
 @Scripts.Render("~/bundles/js/Register")
 
 
-<div ng-app="RR">
+<div ng-app="RR" ng-controller="RegisterCtrl">
     <h2>@ViewBag.Title.</h2>
 
-    @using (Html.BeginForm("Register", "User", FormMethod.Post, new { name = "formRegisterUser", ng_controller = "RegisterCtrl" }))
+    @using (Html.BeginForm("Register", "User", FormMethod.Post, new { name = "formRegisterUser" }))
     {
         <h4>Stwórz nowe konto</h4>
         <hr />

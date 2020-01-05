@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Transactions;
 using System.Web;
 
 namespace RoomReservation.Repositories
@@ -20,6 +21,27 @@ namespace RoomReservation.Repositories
                 using (RoomReservationContext db = new RoomReservationContext())
                 {
                     result = db.Users.Where(x => x.Email == email).SingleOrDefault();
+
+                    //using (TransactionScope tran = new TransactionScope())
+                    //{
+                    //    RRRoom room1 = new RRRoom()
+                    //    {
+                    //        Details = "test 1",
+                    //        Name = "t1"
+                    //    };
+                    //    db.Rooms.Add(room1);
+                    //    db.SaveChanges();
+
+                    //    room1 = new RRRoom()
+                    //    {
+                    //        Name = "t2"
+                    //    };
+                    //    db.Rooms.Add(room1);
+                    //    db.SaveChanges();
+
+                    //if(asdasdsad)
+                    //    tran.Complete();
+                    //}
                 }
                 if (result != null)
                 {
@@ -29,6 +51,10 @@ namespace RoomReservation.Repositories
                         result = null;
                     }
                 }
+
+
+
+
                 return result;
             }
             catch (Exception ex)

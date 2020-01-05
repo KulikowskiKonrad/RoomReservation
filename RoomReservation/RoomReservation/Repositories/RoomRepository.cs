@@ -12,6 +12,34 @@ namespace RoomReservation.Repositories
     public class RoomRepository
     {
 
+        private int _pole1;
+        public int Pole1
+        {
+            get
+            {
+                if (_pole1 == -1)
+                {
+                    //pobierz wartosc z bazy i utaw ja Pole1 = wartosczbazy
+                }
+                return _pole1;
+            }
+            set
+            {
+                _pole1 = value;
+            }
+        }
+
+
+        public string Imie { get; set; }
+        public string Nazwisko { get; set; }
+        public string PelneImieINaziwsko
+        {
+            get
+            {
+                return Imie + " " + Nazwisko;
+            }
+        }
+
         public List<RRRoom> DownloadAll()
         {
             try
@@ -19,6 +47,10 @@ namespace RoomReservation.Repositories
                 List<RRRoom> roomList = null;
                 using (RoomReservationContext db = new RoomReservationContext())
                 {
+                    string mojaZmienna = string.Format("tekst {0}  {1}", DateTime.Now, DateTime.Today);
+                    string mojaZmienna1 = "tekst " + DateTime.Now + "     " + DateTime.Today;
+                    string mojaZmienna2 = $"tekt {DateTime.Now}    {DateTime.Today}";
+
                     roomList = db.Rooms.Where(x => x.IsDeleted == false).ToList();
                     return roomList;
                 }

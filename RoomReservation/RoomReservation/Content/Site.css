@@ -19,3 +19,16 @@
 textarea {
     resize: none;
 }
+
+/*.fc-left > h2 {
+    font-size: 10px;
+}*/
+
+/*.klasa1 .klasa2*/
+/*.klasa1.klasa2*/
+/*.klasa1 > .klasa2*/
+/*.klasa1:not(.klasa2)*/
+/*.klasa1 .klasa2 :last-child*/
+/*.klasa1 .klasa2 :first-child*/
+
+

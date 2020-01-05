@@ -1,6 +1,6 @@
-﻿var app = angular.module('calendarDemoApp', ['ui.calendar', 'ui.bootstrap']);
+var app = angular.module('calendarDemoApp', ['ui.calendar', 'ui.bootstrap']);
 
-app.controller('UserIndexCtrl', ["$scope", "$http", "$compile", "uiCalendarConfig", function ($scope, $http, $compile, uiCalendarConfig) {
+app.controller('UserIndexCtrl', function ($scope, $http, $compile, uiCalendarConfig) {
     $scope.events = [];
 
     $scope.loadCalendarItems = function () {
@@ -50,4 +50,4 @@ app.controller('UserIndexCtrl', ["$scope", "$http", "$compile", "uiCalendarConfi
             });
     }
     $scope.loadRoomList();
-}]);
+});

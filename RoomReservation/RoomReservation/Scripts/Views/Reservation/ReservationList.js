@@ -1,5 +1,5 @@
 ﻿var app = angular.module('RR', []);
-app.controller('ReservationListCtrl', function ($scope, $http) {
+app.controller('ReservationListCtrl', ["$scope", "$http", function ($scope, $http) {
     $scope.loadList = function () {
         let roomId = ($scope.filteredRoom != null ? $scope.filteredRoom.Id : '');
         $http.get("/api/ApiReservation/GetAll?roomId=" + roomId)
@@ -131,7 +131,7 @@ app.controller('ReservationListCtrl', function ($scope, $http) {
                 });
         }
     }
-})
+}])
     .directive('date', function (dateFilter) {
         return {
             require: 'ngModel',

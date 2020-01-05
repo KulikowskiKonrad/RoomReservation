@@ -14,7 +14,7 @@ namespace RoomReservation.Enum
 
         [Description("Zaakceptowany")]
         Accepted = 2,
-
+        //
         [Description("Odrzucony")]
         Rejected = 3,
     }

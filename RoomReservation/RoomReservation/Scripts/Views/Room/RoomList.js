@@ -1,5 +1,5 @@
 ﻿var app = angular.module('RR', []);
-app.controller('RoomListCtrl', function ($scope, $http) {
+app.controller('RoomListCtrl', ["$scope", "$http", function ($scope, $http) {
     $scope.loadList = function () {
         $http.get("/api/ApiRoom/GetAll")
             .then(function (res, status, xhr) {
@@ -114,4 +114,4 @@ app.controller('RoomListCtrl', function ($scope, $http) {
     //                });
     //            });
     //    }
-});
+}]);

@@ -13,11 +13,15 @@ namespace RoomReservation.Api
 {
     public class ApiRoomController : ApiController
     {
+        //private const int MaxIloscZnakow = 20;
+
         private RoomRepository _roomRepository = new RoomRepository();
 
         [HttpGet]
         public IHttpActionResult GetAll()
         {
+            //KeyValuePair<>
+
             try
             {
                 List<RoomListItem> result = _roomRepository.DownloadAll().Select(x => new RoomListItem()
@@ -60,17 +64,16 @@ namespace RoomReservation.Api
         }
 
         [HttpPost]
-        public IHttpActionResult SaveDetails(EditRoomViewModel model)
+        public IHttpActionResult SaveDetails([FromBody]EditRoomViewModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    RoomRepository roomRepository = new RoomRepository();
                     RRRoom room = null;
                     if (model.Id.HasValue)
                     {
-                        room = roomRepository.Download(model.Id.Value);
+                        room = _roomRepository.Download(model.Id.Value);
                     }
                     else
                     {
@@ -78,7 +81,7 @@ namespace RoomReservation.Api
                     }
                     room.Name = model.Name;
                     room.Details = model.Details;
-                    long? rezultatZapisu = roomRepository.Save(room);
+                    long? rezultatZapisu = _roomRepository.Save(room);
                     if (rezultatZapisu == null)
                     {
                         return InternalServerError();
